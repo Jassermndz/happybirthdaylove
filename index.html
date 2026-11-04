@@ -590,14 +590,22 @@
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <defs>
-      <linearGradient id="pg" x1="0" y1="1" x2="0" y2="0">
-        <stop offset="0" stop-color="#F7C6D9" />
-        <stop offset=".55" stop-color="#FBE3EC" />
-        <stop offset="1" stop-color="#fff" />
+      <linearGradient id="pg" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#e8a0bf" />
+        <stop offset=".22" stop-color="#f8dce7" />
+        <stop offset=".5" stop-color="#fffafc" />
+        <stop offset=".78" stop-color="#f8dce7" />
+        <stop offset="1" stop-color="#e8a0bf" />
       </linearGradient>
-      <linearGradient id="pg2" x1="0" y1="1" x2="0" y2="0">
-        <stop offset="0" stop-color="#E8A0BF" />
-        <stop offset="1" stop-color="#FCE8F0" />
+      <linearGradient id="pg2" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#d887aa" />
+        <stop offset=".5" stop-color="#f6d5e1" />
+        <stop offset="1" stop-color="#d887aa" />
+      </linearGradient>
+      <linearGradient id="leafGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#bfd0a5" />
+        <stop offset=".5" stop-color="#789975" />
+        <stop offset="1" stop-color="#526f5b" />
       </linearGradient>
     </defs>
   </svg>
@@ -672,15 +680,22 @@
     ];
 
     // ===== Lirio SVG =====
-    const D = "M0,0C-13,-14 -11,-38 0,-54C11,-38 13,-14 0,0Z";
+    const D = "M0,0C-6,-10 -18,-27 -15,-43C-13,-54 -6,-62 0,-66C6,-62 13,-54 15,-43C18,-27 6,-10 0,0Z";
     function lily(h = 1) {
-      const pet = (a, f) => `<g class="p" style="--a:${a}"><path d="${D}" fill="url(#${f})" stroke="#e8a0bf" stroke-width=".6"/><path d="M0,-4V-40" stroke="#e8a0bf88" stroke-width=".7"/></g>`;
+      const pet = (a, f) => `<g class="p" style="--a:${a}">
+        <path d="${D}" fill="url(#${f})" stroke="#d887aa" stroke-opacity=".55" stroke-width=".7"/>
+        <path d="M0,-3C-1,-18 -2,-38 0,-58" fill="none" stroke="#fff" stroke-opacity=".72" stroke-width="1.1"/>
+        <path d="M0,-5C-3,-20 -8,-32 -11,-41M0,-5C3,-20 8,-32 11,-41" fill="none" stroke="#d887aa" stroke-opacity=".42" stroke-width=".65"/>
+        <g fill="#c47b59" opacity=".58"><circle cx="-4" cy="-13" r="1"/><circle cx="0" cy="-16" r="1.1"/><circle cx="4" cy="-13" r="1"/></g>
+      </g>`;
       return `<svg class="lily" viewBox="0 0 100 150" aria-hidden="true">
-  <path d="M50 66C47 95 53 125 50 150" stroke="var(--leaf)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-  <path d="M50 118C32 112 24 98 20 86C36 90 47 102 50 118Z" fill="var(--leaf)"/>
-  <path d="M51 132C68 128 76 116 80 105C64 108 53 118 51 132Z" fill="var(--leaf)" opacity=".85"/>
+  <path d="M50 66C47 95 53 125 50 150" stroke="url(#leafGrad)" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M50 118C32 112 24 98 20 86C36 90 47 102 50 118Z" fill="url(#leafGrad)"/>
+  <path d="M50 117C40 105 31 96 23 89" fill="none" stroke="#d5dfbd" stroke-opacity=".65" stroke-width="1"/>
+  <path d="M51 132C68 128 76 116 80 105C64 108 53 118 51 132Z" fill="url(#leafGrad)"/>
+  <path d="M54 128C63 120 71 113 77 108" fill="none" stroke="#d5dfbd" stroke-opacity=".65" stroke-width="1"/>
   <g transform="translate(50 66)">${pet(-62, "pg2")}${pet(62, "pg2")}${pet(-30, "pg")}${pet(30, "pg")}${pet(0, "pg")}
-  <g class="st"><path d="M0 0L-9-30M0 0L0-34M0 0L9-30" stroke="#d9b98a" stroke-width="1.3"/><circle cx="-9" cy="-30" r="2.4" fill="#E6C79C"/><circle cx="0" cy="-34" r="2.4" fill="#E6C79C"/><circle cx="9" cy="-30" r="2.4" fill="#E6C79C"/></g></g></svg>`;
+  <g class="st"><path d="M0 0C-4-12 -9-22 -10-31M0 0C0-14 0-25 0-35M0 0C4-12 9-22 10-31" fill="none" stroke="#b88d55" stroke-width="1.2"/><ellipse cx="-10" cy="-32" rx="2.5" ry="3.5" fill="#d2a64d"/><ellipse cx="0" cy="-36" rx="2.5" ry="3.5" fill="#d2a64d"/><ellipse cx="10" cy="-32" rx="2.5" ry="3.5" fill="#d2a64d"/></g></g></svg>`;
     }
     const $ = s => document.querySelector(s);
     const still = matchMedia("(prefers-reduced-motion:reduce)").matches;
