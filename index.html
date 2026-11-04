@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Para Lili</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Great+Vibes&family=Lato:wght@300;400&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --sky-top: #BFE3F5;
+      --sky-low: #F7C6D9;
+      --bg: #FFFDFB;
+      --ink: #3F3A3D;
+      --pink: #E8A0BF;
+      --blue: #8EC9EC;
+      --gold: #E6C79C;
+      --card: #ffffffd9;
+      --paper: #FFF8EE;
+      --paper-ink: #3F3A3D;
+      --leaf: #8DAE8A;
+      --serif: "Cormorant Garamond", Georgia, serif;
+      --script: "Great Vibes", "Brush Script MT", cursive;
+      --sans: Lato, system-ui, sans-serif;
+      color-scheme: light;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px)
+    }
+
+    @media (prefers-color-scheme:dark) {
+      :root:not([data-theme="light"]) {
+        --sky-top: #1d2a4a;
+        --sky-low: #6b4268;
+        --bg: #171526;
+        --ink: #F3E9F0;
+        --card: #2a2440d9;
+        --leaf: #6f9470;
+        color-scheme: dark
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --sky-top: #1d2a4a;
+      --sky-low: #6b4268;
+      --bg: #171526;
+      --ink: #F3E9F0;
+      --card: #2a2440d9;
+      --leaf: #6f9470;
+      color-scheme: dark
+    }
+
+    html {
+      scroll-padding-top: env(safe-area-inset-top, 0px);
+      scroll-behavior: smooth
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      line-height: 1.6;
+      overflow-x: hidden
+    }
+
+    section {
+      position: relative;
+      padding: 5rem 1.25rem
+    }
+
+    h2 {
+      font-weight: 400;
+      font-style: italic;
+      font-size: clamp(1.8rem, 6vw, 2.6rem);
+      text-align: center;
+      margin: 0 0 .5rem
+    }
+
+    .sub {
+      font-family: var(--sans);
+      font-weight: 300;
+      text-align: center;
+      font-size: .95rem;
+      letter-spacing: .04em;
+      opacity: .8;
+      margin: 0 0 2rem
+    }
+
+    /* HERO */
+    #hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 14vh;
+      overflow: hidden;
+      background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-low) 100%);
+      text-align: center
+    }
+
+    #hero h1 {
+      margin: 0;
+      font-weight: 400;
+      font-style: italic;
+      font-size: clamp(2rem, 8vw, 3.6rem);
+      line-height: 1.1;
+      z-index: 2
+    }
+
+    #hero h1 span {
+      display: block;
+      font-family: var(--script);
+      font-style: normal;
+      font-size: clamp(5rem, 26vw, 10rem);
+      line-height: 1;
+      color: #fff;
+      text-shadow: 0 4px 30px #e8a0bfaa
+    }
+
+    #hero p {
+      font-family: var(--sans);
+      font-weight: 300;
+      margin: 1rem 0 0;
+      z-index: 2;
+      padding: 0 1rem
+    }
+
+    .cloud {
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+      filter: blur(18px);
+      opacity: .55
+    }
+
+    .row {
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 0
+    }
+
+    .row .lily {
+      width: clamp(80px, 22vw, 170px);
+      margin: 0 -2vw;
+      opacity: 0;
+      transform: translateY(40px) scale(.8);
+      transform-origin: 50% 100%;
+      transition: opacity 1.6s ease, transform 2.2s cubic-bezier(.2, .7, .2, 1)
+    }
+
+    .row.go .lily {
+      opacity: 1;
+      transform: none
+    }
+
+    .hint {
+      position: absolute;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
+      font-family: var(--sans);
+      font-size: .8rem;
+      color: #fff;
+      opacity: .9;
+      z-index: 3;
+      display: none
+    }
+
+    /* LILY */
+    .lily {
+      display: block;
+      overflow: visible
+    }
+
+    .p {
+      transform: rotate(calc(var(--a) * 1deg * var(--o, 0))) scale(calc(.5 + .5 * var(--o, 0)));
+      transition: transform 1.6s cubic-bezier(.2, .7, .2, 1)
+    }
+
+    .st {
+      opacity: var(--o, 0);
+      transition: opacity 1.4s
+    }
+
+    .lily.open,
+    .go .lily {
+      --o: 1
+    }
+
+    .garden {
+      max-width: 640px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .25rem .5rem
+    }
+
+    .garden button {
+      background: none;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+      border-radius: 12px
+    }
+
+    .garden button:focus-visible {
+      outline: 2px solid var(--pink);
+      outline-offset: 2px
+    }
+
+    .garden .lily {
+      width: 100%;
+      height: auto;
+      transition: transform .6s
+    }
+
+    .garden button:nth-child(even) {
+      margin-top: 1.8rem
+    }
+
+    .garden button:hover .lily {
+      transform: translateY(-4px)
+    }
+
+    #phrase {
+      max-width: 420px;
+      margin: 2rem auto 0;
+      min-height: 4.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: var(--card);
+      border: 1px solid var(--pink);
+      border-radius: 22px;
+      padding: 1rem 1.5rem;
+      font-style: italic;
+      font-size: 1.35rem;
+      box-shadow: 0 10px 30px #e8a0bf33;
+      transition: opacity .4s
+    }
+
+    #garden {
+      background: linear-gradient(180deg, var(--bg), color-mix(in srgb, var(--sky-top) 35%, var(--bg)) 60%, var(--bg))
+    }
+
+    /* LETTER */
+    #letter {
+      display: flex;
+      flex-direction: column;
+      align-items: center
+    }
+
+    .env {
+      position: relative;
+      width: min(88vw, 340px);
+      aspect-ratio: 3/2;
+      border: 0;
+      padding: 0;
+      background: #BFE3F5;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 18px 40px #8ec9ec66;
+      transition: opacity .8s .5s, transform .8s .5s
+    }
+
+    .env::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #a9d7ee, #d3ecf8);
+      clip-path: polygon(0 100%, 50% 45%, 100% 100%);
+      border-radius: 0 0 6px 6px
+    }
+
+    .flap {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 60%;
+      background: #8EC9EC;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      transform-origin: top;
+      transition: transform .9s
+    }
+
+    .seal {
+      position: absolute;
+      left: 50%;
+      top: 60%;
+      width: 56px;
+      height: 56px;
+      margin: -28px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #f7c6d9, #d9779f);
+      color: #fff;
+      font-family: var(--script);
+      font-size: 2rem;
+      line-height: 56px;
+      box-shadow: 0 4px 10px #0003;
+      z-index: 2;
+      transition: opacity .4s
+    }
+
+    .env:focus-visible {
+      outline: 2px solid var(--pink);
+      outline-offset: 4px
+    }
+
+    .tap {
+      font-family: var(--sans);
+      font-size: .9rem;
+      opacity: .75;
+      margin-top: 1.2rem
+    }
+
+    #letter.open .flap {
+      transform: rotateX(180deg)
+    }
+
+    #letter.open .seal,
+    #letter.open .tap {
+      opacity: 0
+    }
+
+    #letter.open .env {
+      opacity: 0;
+      transform: translateY(40px);
+      pointer-events: none;
+      position: absolute
+    }
+
+    .paper {
+      display: none;
+      width: min(94vw, 560px);
+      background: var(--paper);
+      color: var(--paper-ink);
+      border-radius: 8px;
+      padding: 2.2rem 1.6rem;
+      box-shadow: 0 20px 50px #e8a0bf44;
+      background-image: repeating-linear-gradient(0deg, transparent 0 31px, #e6c79c33 31px 32px)
+    }
+
+    #letter.open .paper {
+      display: block
+    }
+
+    .paper p {
+      font-family: var(--script);
+      font-size: 1.7rem;
+      line-height: 1.55;
+      margin: 0 0 1rem;
+      opacity: 0;
+      filter: blur(4px);
+      transform: translateY(8px);
+      transition: opacity 1.6s, filter 1.6s, transform 1.6s
+    }
+
+    .paper p.on {
+      opacity: 1;
+      filter: none;
+      transform: none
+    }
+
+    .paper .sig {
+      text-align: right;
+      font-size: 2.2rem
+    }
+
+    /* PHOTOS */
+    #photos {
+      background: linear-gradient(180deg, var(--bg), color-mix(in srgb, var(--sky-low) 30%, var(--bg)))
+    }
+
+    .grid {
+      max-width: 760px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.6rem 1rem
+    }
+
+    @media(min-width:640px) {
+      .grid {
+        grid-template-columns: repeat(3, 1fr)
+      }
+    }
+
+    .pol {
+      background: #fff;
+      padding: 8px 8px 0;
+      border-radius: 4px;
+      box-shadow: 0 10px 24px #3f3a3d26;
+      transform: rotate(var(--r));
+      border: 0;
+      cursor: pointer;
+      font: inherit;
+      color: #3F3A3D
+    }
+
+    .pol .im {
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #F7C6D9, #BFE3F5);
+      display: grid;
+      place-items: center;
+      overflow: hidden
+    }
+
+    .pol .im img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover
+    }
+
+    .pol .im svg {
+      width: 38%;
+      opacity: .8
+    }
+
+    .pol span {
+      display: block;
+      padding: .5rem 0 .6rem;
+      font-family: var(--script);
+      font-size: 1.3rem;
+      min-height: 2.6rem
+    }
+
+    #lb {
+      position: fixed;
+      inset: 0;
+      background: #000b;
+      display: none;
+      place-items: center;
+      z-index: 50;
+      padding: 1rem
+    }
+
+    #lb.on {
+      display: grid
+    }
+
+    #lb img {
+      max-width: 100%;
+      max-height: 85vh;
+      border-radius: 6px
+    }
+
+    /* CLOSE */
+    #close {
+      text-align: center;
+      overflow: hidden;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--sky-low) 30%, var(--bg)), var(--sky-low))
+    }
+
+    #close .lily {
+      width: min(60vw, 240px);
+      margin: 0 auto 1rem
+    }
+
+    #close h2 {
+      font-size: clamp(2rem, 7vw, 3rem);
+      font-style: normal
+    }
+
+    #close .sig {
+      font-family: var(--script);
+      font-size: 2.8rem;
+      color: var(--ink);
+      margin: 0
+    }
+
+    .fp {
+      position: fixed;
+      top: -30px;
+      width: 14px;
+      height: 20px;
+      border-radius: 70% 0 70% 0;
+      background: var(--pink);
+      pointer-events: none;
+      z-index: 40;
+      animation: fall linear forwards
+    }
+
+    @keyframes fall {
+      to {
+        transform: translate(var(--dx), 110vh) rotate(720deg);
+        opacity: .7
+      }
+    }
+
+    .bg-petals {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden
+    }
+
+    .bg-petals i {
+      position: absolute;
+      top: -30px;
+      width: 11px;
+      height: 15px;
+      border-radius: 70% 0 70% 0;
+      background: var(--pink);
+      opacity: .45;
+      animation: drift linear infinite
+    }
+
+    @keyframes drift {
+      to {
+        transform: translate(var(--dx), 110vh) rotate(540deg)
+      }
+    }
+
+    main {
+      position: relative;
+      z-index: 1
+    }
+
+    /* MUSIC */
+    #music {
+      position: fixed;
+      right: 14px;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+      z-index: 30;
+      display: none;
+      align-items: center;
+      gap: .6rem;
+      background: var(--card);
+      border: 1px solid var(--pink);
+      border-radius: 30px;
+      padding: 6px 14px 6px 6px;
+      font: 300 .8rem var(--sans);
+      color: var(--ink);
+      cursor: pointer;
+      backdrop-filter: blur(6px)
+    }
+
+    #music b {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--pink);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 1rem
+    }
+
+    #music.play b {
+      animation: pulse 1.6s infinite
+    }
+
+    @keyframes pulse {
+      50% {
+        box-shadow: 0 0 0 8px #e8a0bf44
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+      * {
+        animation: none !important;
+        transition-duration: .01s !important;
+        scroll-behavior: auto !important
+      }
+
+      .bg-petals {
+        display: none
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="pg" x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0" stop-color="#F7C6D9" />
+        <stop offset=".55" stop-color="#FBE3EC" />
+        <stop offset="1" stop-color="#fff" />
+      </linearGradient>
+      <linearGradient id="pg2" x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0" stop-color="#E8A0BF" />
+        <stop offset="1" stop-color="#FCE8F0" />
+      </linearGradient>
+    </defs>
+  </svg>
+  <div class="bg-petals" id="bgp"></div>
+  <main>
+    <section id="hero">
+      <div class="cloud" style="width:260px;height:70px;top:10%;left:-40px"></div>
+      <div class="cloud" style="width:300px;height:80px;top:34%;right:-60px"></div>
+      <h1>Feliz cumpleaños<span>Amor</span></h1>
+      <p>Hecho con amor, solo para ti</p>
+      <div class="row" id="heroRow"></div>
+    </section>
+
+    <section id="garden">
+      <h2>Un lirio por cada razón</h2>
+      <p class="sub">Toca los lirios para abrirlos</p>
+      <div class="garden" id="gardenGrid"></div>
+      <div id="phrase" aria-live="polite">Elige un lirio</div>
+    </section>
+
+    <section id="letter">
+      <h2>Una carta para ti</h2>
+      <p class="sub">Tiene tu nombre</p>
+      <button class="env" id="env" aria-label="Abrir la carta">
+        <div class="flap"></div>
+        <div class="seal">L</div>
+      </button>
+      <p class="tap">Toca el sobre</p>
+      <article class="paper" id="paper"></article>
+    </section>
+
+    <section id="photos">
+      <h2>Nuestras fotos</h2>
+      <p class="sub">Toca una para verla grande</p>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <section id="close">
+      <div id="closeLily"></div>
+      <h2>Te amo, Amor. Feliz cumpleaños.</h2>
+      <p class="sig">— Klisman</p>
+    </section>
+  </main>
+  <div id="lb" role="dialog" aria-label="Foto"><img alt=""></div>
+  <button id="music" aria-label="Música"><b>♪</b>Toca para escuchar nuestra canción</button>
+
+  <script>
+    // ===== Contenido editable =====
+    const MUSIC_SRC = ""; // ej: "musica/hasta-donde-te-quiero.mp3"
+    const phrases = [
+      "Porque tu sonrisa ilumina mis días",
+      "Porque a tu lado todo se siente más bonito",
+      "Porque eres mi lugar favorito",
+      "Porque contigo hasta lo simple se vuelve especial",
+      "Porque tu cariño me hace mejor persona",
+      "Porque eres dulce, fuerte y única",
+      "Porque contigo quiero todos mis mañanas",
+      "Porque eres mi lirio favorito, Lili"
+    ];
+    const letter = [
+      "Mi querida Lili:",
+      "Hoy es tu día, y quise regalarte algo hecho con mis propias manos, porque tú mereces algo único, igual que tú.",
+      "¿Sabías que tu nombre se parece al de una de las flores más hermosas? Los lirios simbolizan la pureza, la ternura y los comienzos nuevos. Por eso los elegí: porque así me haces sentir. Contigo todo florece, hasta los días más grises.",
+      "Gracias por tu sonrisa, que ilumina mi mundo como el cielo cuando amanece. Gracias por tu paciencia, por tu cariño y por ser exactamente como eres. Contigo aprendí que el amor está en los detalles pequeños, en las risas, en los silencios tranquilos y en saber que estás ahí.",
+      "En este nuevo año de tu vida, deseo que la vida te devuelva todo el amor y la alegría que tú regalas sin darte cuenta. Que cumplas todos tus sueños, y que yo tenga la dicha de acompañarte en cada uno de ellos.",
+      "Feliz cumpleaños, mi amor. Gracias por existir, y por dejarme ser parte de tu vida.",
+      "Te amo."
+    ];
+    const photos = [
+      { src: "img/1.jpeg", caption: "Nuestro comienzo" }, { src: "img/2.jpeg", caption: "Risas" }, { src: "img/3.jpeg", caption: "Aventuras" },
+      { src: "img/4.jpeg", caption: "Contigo" }, { src: "img/5.jpeg", caption: "Momentos" }, { src: "img/6.jpeg", caption: "Siempre" }
+    ];
+
+    // ===== Lirio SVG =====
+    const D = "M0,0C-13,-14 -11,-38 0,-54C11,-38 13,-14 0,0Z";
+    function lily(h = 1) {
+      const pet = (a, f) => `<g class="p" style="--a:${a}"><path d="${D}" fill="url(#${f})" stroke="#e8a0bf" stroke-width=".6"/><path d="M0,-4V-40" stroke="#e8a0bf88" stroke-width=".7"/></g>`;
+      return `<svg class="lily" viewBox="0 0 100 150" aria-hidden="true">
+  <path d="M50 66C47 95 53 125 50 150" stroke="var(--leaf)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <path d="M50 118C32 112 24 98 20 86C36 90 47 102 50 118Z" fill="var(--leaf)"/>
+  <path d="M51 132C68 128 76 116 80 105C64 108 53 118 51 132Z" fill="var(--leaf)" opacity=".85"/>
+  <g transform="translate(50 66)">${pet(-62, "pg2")}${pet(62, "pg2")}${pet(-30, "pg")}${pet(30, "pg")}${pet(0, "pg")}
+  <g class="st"><path d="M0 0L-9-30M0 0L0-34M0 0L9-30" stroke="#d9b98a" stroke-width="1.3"/><circle cx="-9" cy="-30" r="2.4" fill="#E6C79C"/><circle cx="0" cy="-34" r="2.4" fill="#E6C79C"/><circle cx="9" cy="-30" r="2.4" fill="#E6C79C"/></g></g></svg>`;
+    }
+    const $ = s => document.querySelector(s);
+    const still = matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+    // Hero
+    const row = $("#heroRow");
+    [[.8, 0], [1.15, 300], [1.4, 150], [1.15, 450], [.8, 600]].forEach(([s, d]) => {
+      row.insertAdjacentHTML("beforeend", `<div class="lily" style="width:calc(clamp(80px,22vw,170px)*${s});transition-delay:${d}ms">${lily()}</div>`);
+    });
+    row.querySelectorAll(".lily").forEach(l => { l.firstElementChild.style.width = "100%"; l.firstElementChild.style.height = "auto" });
+    setTimeout(() => row.classList.add("go"), still ? 0 : 400);
+
+    // Jardín
+    const gg = $("#gardenGrid"), ph = $("#phrase");
+    phrases.forEach((t, i) => {
+      const b = document.createElement("button");
+      b.setAttribute("aria-label", "Lirio " + (i + 1));
+      b.innerHTML = lily();
+      b.onclick = () => { b.firstElementChild.classList.add("open"); ph.style.opacity = 0; setTimeout(() => { ph.textContent = t; ph.style.opacity = 1 }, 200) };
+      b.onmouseenter = () => b.firstElementChild.classList.add("open");
+      gg.append(b);
+    });
+
+    // Carta
+    const paper = $("#paper");
+    letter.forEach((t, i) => { const p = document.createElement("p"); p.textContent = t; if (i == letter.length - 1) p.style.marginBottom = ".2rem"; paper.append(p) });
+    paper.insertAdjacentHTML("beforeend", '<p class="sig">— Klisman</p>');
+    $("#env").onclick = () => {
+      $("#letter").classList.add("open");
+      paper.querySelectorAll("p").forEach((p, i) => setTimeout(() => p.classList.add("on"), (still ? 0 : 900) + i * (still ? 0 : 1700)));
+      paper.scrollIntoView({ behavior: still ? "auto" : "smooth", block: "center" });
+    };
+
+    // Fotos
+    const grid = $("#grid"), lb = $("#lb");
+    photos.forEach((f, i) => {
+      const b = document.createElement("button"); b.className = "pol"; b.style.setProperty("--r", ((i % 3) - 1) * 2.5 + "deg");
+      b.innerHTML = `<div class="im">${f.src ? `<img src="${f.src}" alt="${f.caption}" loading="lazy">` : `<div style="width:100%;display:grid;place-items:center">${lily().replace('class="lily"', 'class="lily open"')}</div>`}</div><span>${f.caption}</span>`;
+      if (f.src) b.onclick = () => { lb.querySelector("img").src = f.src; lb.classList.add("on") };
+      grid.append(b);
+    });
+    lb.onclick = () => lb.classList.remove("on");
+
+    // Cierre + confeti
+    $("#closeLily").innerHTML = lily();
+    const cl = $("#closeLily .lily");
+    function petals(n) {
+      for (let i = 0; i < n; i++) {
+        const p = document.createElement("i"); p.className = "fp";
+        p.style.cssText = `left:${Math.random() * 100}vw;--dx:${(Math.random() - .5) * 160}px;animation-duration:${3 + Math.random() * 3}s;animation-delay:${Math.random() * 1.5}s;background:${["#F7C6D9", "#E8A0BF", "#BFE3F5", "#fff"][i % 4]}`;
+        document.body.append(p); setTimeout(() => p.remove(), 8000)
+      }
+    }
+    let done = false;
+    new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { cl.classList.add("open"); if (!done && !still) { done = true; petals(40) } }
+    }), { threshold: .5 }).observe($("#close"));
+
+    // Pétalos de fondo
+    for (let i = 0; i < 12; i++) {
+      const p = document.createElement("i");
+      p.style.cssText = `left:${Math.random() * 100}%;--dx:${(Math.random() - .5) * 200}px;animation-duration:${14 + Math.random() * 12}s;animation-delay:${-Math.random() * 20}s`;
+      $("#bgp").append(p)
+    }
+
+    // Música
+    if (MUSIC_SRC) {
+      const a = new Audio(MUSIC_SRC); a.loop = true; a.volume = .5;
+      const m = $("#music"); m.style.display = "flex";
+      m.onclick = () => { if (a.paused) { a.play().catch(() => { }); m.classList.add("play") } else { a.pause(); m.classList.remove("play") } };
+    }
+  </script>
+</body>
+
+</html>
